@@ -15,15 +15,28 @@ def print_results(results, only_tag=None):
         due_str = f" (due: {due})" if due else ""
         print(f"[{tag}] {file}:{line} - {msg}{due_str}")
 
+def scan_path(path: Path):
+    if not path.exists():
+        print(f"Path not found: {path}")
+        return []
+    
+    if path.is_file():
+        return scan_file(path)
+    elif path.is_dir():
+        return scan_directory(path)
+    else:
+        print("Invalid path.")
+        return[]
+
 def main_menu():
     print("Welcome to TaskTagger Interactive Mode\n")
     path = input ("Enter the path to the file to scan: ").strip()
-
-    if not Path(path).exists():
-        print("Path does not exist.")
+    path = Path(path_input)
 
     only = input("Filter by tag (TODO/FIXME/HACK) or leave blank: ").strip()
-    results = scan_file(Path(path))
+    
+    results = scan_path
+    
     print_results(results, only_tag=only if only else None)
 
 def main():
@@ -43,17 +56,5 @@ def main():
         return
     
     target_path = Path(args.path)
-
-    if not target_path.exists():
-        print(f"Path not found: {args.path}")
-        return
-
-    if target_path.is_file():
-        results = scan_file(target_path)
-    elif target_path.is_dir():
-        results = scan_directory(target_path)
-    else:
-        print("Invalid path.")
-        return
-
+    results = scan_path(target_path)
     print_results(results, only_tag=args.only)
