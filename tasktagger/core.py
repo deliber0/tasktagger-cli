@@ -17,5 +17,16 @@ def scan_file(file_path: Path) -> List[Tuple[str, Path, int, str, Optional[str]]
                     tag, due, message = match.groups()
                     results.append((tag.upper(), file_path, i, message.strip(), due))                    
     except (UnicodeDecodeError, PermissionError):
-        pass  # Skip unreadable or binary files
+        pass  # Skip unreadable or binary file
+    return results
+
+def scan_directory(path: Path) -> List[Tuple[str, Path, int, str, Optional[str]]]:
+    """"Recursively scan a directory for task tags in supported file types."""
+    results = []
+    supported_exts = [".py", ".js", ".ts", ".sh", ".c", ".cpp", ".java", ".rb"]
+
+    for file in path.rglob("*"):
+        if file.is_file() and file.suffix.lower() in supported_exts:
+            results.extend(scan_file(file))
+
     return results
