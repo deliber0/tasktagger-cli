@@ -2,7 +2,10 @@ import argparse
 from pathlib import Path
 from tasktagger.core import scan_file
 
-def print_results(results):
+def print_results(results, only_tag=None):
+    if only_tag:
+        results = [r for r in results if r[0].upper() == only_tag.upper()]
+
     if not results:
         print("No task tags found.")
         return
@@ -16,9 +19,11 @@ def main():
         description="Scan a single file for TODO, FIXME, or HACK-style tags."
     )
     parser.add_argument("path", type=str, help="Path to a file")
-    args = parser.parse_args()
+    parser.add_argument("--only", type=str, help="Only show a specific tag (e.g. TODO)")
 
+    args = parser.parse_args()
     target_path = Path(args.path)
+
     if not target_path.exists():
         print(f"Path not found: {args.path}")
         return
@@ -28,4 +33,4 @@ def main():
         return
 
     results = scan_file(target_path)
-    print_results(results)
+    print_results(results, only_tag=args.only)
