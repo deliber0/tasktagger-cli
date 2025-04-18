@@ -11,8 +11,9 @@ def print_results(results, only_tag=None):
         return
 
     print(f"Found {len(results)} task tag(s):\n")
-    for tag, file, line, msg in results:
-        print(f"[{tag}] {file}:{line} – {msg}")
+    for tag, file, line, msg, due in results:
+        due_str = f" (due: {due})" if due else ""
+        print(f"[{tag}] {file}:{line} - {msg}{due_str}")
 
 def main():
     parser = argparse.ArgumentParser(
