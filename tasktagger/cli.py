@@ -15,14 +15,33 @@ def print_results(results, only_tag=None):
         due_str = f" (due: {due})" if due else ""
         print(f"[{tag}] {file}:{line} - {msg}{due_str}")
 
+def main_menu():
+    print("Welcome to TaskTagger Interactive Mode\n")
+    path = input ("Enter the path to the file to scan: ").strip()
+
+    if not Path(path).exists():
+        print("Path does not exist.")
+
+    only = input("Filter by tag (TODO/FIXME/HACK) or leave blank: ").strip()
+    results = scan_file(Path(path))
+    print_results(results, only_tag=only if only else None)
+
 def main():
-    parser = argparse.ArgumentParser(
-        description="Scan a single file for TODO, FIXME, or HACK-style tags."
-    )
-    parser.add_argument("path", type=str, help="Path to a file")
+    parser = argparse.ArgumentParser(description="Scan a single file for TODO, FIXME, or HACK tags.")
+    parser.add_argument("path", nargs="?", help="Path to a file")
     parser.add_argument("--only", type=str, help="Only show a specific tag (e.g. TODO)")
+    parser.add_argument("--menu", action="store_true", help="Launch interactive menu")
 
     args = parser.parse_args()
+
+    if args.menu:
+        main_menu()
+        return
+    
+    if not args.path:
+        print("You must provide a path or use --menu.")
+        return
+    
     target_path = Path(args.path)
 
     if not target_path.exists():
