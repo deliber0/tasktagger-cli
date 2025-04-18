@@ -7,7 +7,10 @@ SUPPORTED_TAGS = ["TODO", "FIXME", "HACK"]
 def scan_file(file_path: Path) -> List[Tuple[str, Path, int, str, Optional[str]]]:
     """Scan a single file for TODO/FIXME/HACK-style tags, with optional due dates."""
     results = []
-    tag_pattern = re.compile(r"(TODO|FIXME|HACK)(?:\(due:\s*(.*?)\))?:?(.*)")
+    tag_pattern = re.compile(
+        r"#\s*(TODO|FIXME|HACK)(?:\(due:\s*(.*?)\))?:?\s*(.*)",
+        re.IGNORECASE
+        )
 
     try:
         with file_path.open("r", encoding="utf-8") as f:
