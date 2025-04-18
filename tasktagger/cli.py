@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from tasktagger.core import scan_file
+from tasktagger.core import scan_file, scan_directory
 
 def print_results(results, only_tag=None):
     if only_tag:
@@ -48,9 +48,12 @@ def main():
         print(f"Path not found: {args.path}")
         return
 
-    if not target_path.is_file():
-        print("Directories are not supported yet.")
+    if target_path.is_file():
+        results = scan_file(target_path)
+    elif target_path.is_dir():
+        results = scan_directory(target_path)
+    else:
+        print("Invalid path.")
         return
 
-    results = scan_file(target_path)
     print_results(results, only_tag=args.only)
