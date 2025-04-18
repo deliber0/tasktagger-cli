@@ -30,12 +30,12 @@ def scan_path(path: Path):
 
 def main_menu():
     print("Welcome to TaskTagger Interactive Mode\n")
-    path = input ("Enter the path to the file to scan: ").strip()
+    path_input = input ("Enter the path to the file to scan: ").strip()
     path = Path(path_input)
 
     only = input("Filter by tag (TODO/FIXME/HACK) or leave blank: ").strip()
     
-    results = scan_path
+    results = scan_path(path)
     
     print_results(results, only_tag=only if only else None)
 
