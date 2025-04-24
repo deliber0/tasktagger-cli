@@ -22,8 +22,9 @@ def scan_file(file_path: Path) -> List[Tuple[str, Path, int, str, Optional[str]]
             for i, line in enumerate(f, start=1):
                 match = tag_pattern.search(line)
                 if match:
-                    tag, due, message = match.groups()
-                    results.append((tag.upper(), file_path, i, message.strip(), due))                    
+                    tag, assignee, due, message = match.groups()
+                    results.append((tag.upper(), file_path, i, message.strip(), due, assignee))
+                    
     except (UnicodeDecodeError, PermissionError):
         pass  # Skip unreadable or binary file
     return results
